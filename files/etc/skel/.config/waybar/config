@@ -1,0 +1,123 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+    "spacing": 6,
+
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "cpu",
+        "memory",
+        "pulseaudio",
+        "battery",
+        "tray",
+        "custom/notification",
+        "custom/power"
+    ],
+
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "6": "六",
+            "7": "七",
+            "8": "八",
+            "9": "九",
+            "urgent": "",
+            "active": "",
+            "default": ""
+        }
+    },
+
+    "hyprland/window": {
+        "format": "{title}",
+        "max-length": 40,
+        "separate-outputs": true
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "clock": {
+        "format": " {:%H:%M   %d/%m/%Y}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "locale": "pt_BR.UTF-8"
+    },
+
+    "cpu": {
+        "format": " {usage}%",
+        "tooltip": false,
+        "interval": 2
+    },
+
+    "memory": {
+        "format": " {}%",
+        "interval": 2
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": " Mudo",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span foreground='red'><sup></sup></span>",
+            "none": "",
+            "dnd-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
+    "custom/power": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "rofi -show power-menu -modi power-menu:rofi-power-menu || hyprlock"
+    }
+}

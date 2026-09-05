@@ -1,0 +1,60 @@
+# =============================================================
+# Starship Prompt Config — Estilo Omarchy
+# =============================================================
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$package\
+$golang\
+$nodejs\
+$rust\
+$python\
+$docker_context\
+$line_break\
+$character"""
+
+scan_timeout = 10
+add_newline = true
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✗](bold red)"
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "bold cyan"
+read_only = " 󰌾"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+style = "bold red"
+format = '([$all_status$ahead_behind]($style) )'
+
+[package]
+symbol = "󰏗 "
+
+[docker_context]
+symbol = " "
+style = "blue bold"
+
+[nodejs]
+symbol = " "
+style = "bold green"
+
+[golang]
+symbol = " "
+style = "bold cyan"
+
+[python]
+symbol = " "
+style = "bold yellow"
+
+[rust]
+symbol = "󱘗 "
+style = "bold red"

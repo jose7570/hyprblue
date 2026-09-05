@@ -1,152 +1,171 @@
 # 🪁 Hyprland Atômico — Fedora Atomic Customizado
 
-Uma imagem Fedora Atomic 45 imutável com **Hyprland**, **DisplayLink**, apps de produtividade, desenvolvimento e idioma **pt-BR** — construída com [BlueBuild](https://blue-build.org/).
-
-## 🚀 Como usar
-
-### Fazer rebase para esta imagem
-
-```bash
-rpm-ostree rebase ostree-image-signed:docker://ghcr.io/<SEU-USUARIO>/<NOME-DA-IMAGEM>:latest
-```
-
-> Substitua `<SEU-USUARIO>` e `<NOME-DA-IMAGEM>` pelos valores configurados no `recipes/recipe.yml`.
-
-### Baixar a ISO instalável
-
-A ISO é gerada automaticamente pelo GitHub Actions após cada build com sucesso.
-Acesse a aba **Actions** do repositório → selecione o workflow mais recente → baixe o artefato `<NOME-DA-IMAGEM>-installer`.
+Uma distribuição Fedora Atomic 45 (ostree / bootc) imutável e moderna com **Hyprland**, suporte a **DisplayLink (EVDI)**, experiência estética e atalhos inspirados no **Omarchy / Omadora / minimaLinux**, idioma **pt-BR nativo (teclado ABNT2)** e suite completa de produtividade e desenvolvimento — construída via [BlueBuild](https://blue-build.org/) e empacotada em **ISO instalável**.
 
 ---
 
-## 📦 O que está incluído
+## 🚀 Como Gerar e Baixar a ISO Instalável
 
-### Sistema Base
-- **Hyprland** (via `ghcr.io/cjuniorfox/hyprland-atomic-solopasha:45`)
-- Waybar, Rofi, ambiente Wayland completo
-- **RPMFusion** (codecs e drivers extras)
-- Locale **pt-BR** configurado por padrão
+A geração da ISO é automatizada pelo **GitHub Actions** em duas etapas integradas:
+1. Compilação da imagem OCI no GitHub Container Registry (`ghcr.io/jose7570/hyprblue-br:latest`).
+2. Geração da ISO inicializável através do `jasonn3/build-container-installer`.
 
-### Aplicativos RPM (no sistema base)
-| Categoria | Apps |
+### 1. Configurar o segredo de assinatura no GitHub (Obrigatório)
+1. Acesse o seu repositório no GitHub:
+   ```text
+   Settings → Secrets and variables → Actions → New repository secret
+   ```
+2. **Name**: `SIGNING_SECRET`
+3. **Secret**: cole a sua chave privada do Cosign (o conteúdo de `keyjoseam` ou gerada via `cosign generate-key-pair`).
+4. Em `Settings → Packages → Package visibility`, certifique-se de que o pacote gerado esteja como **Public**.
+
+### 2. Disparar o Build
+Faça o push dos commits para a branch `main`:
+```bash
+git add .
+git commit -m "feat: configuracao completa hyprland, displaylink e apps"
+git push origin main
+```
+Ou acione manualmente via interface web:
+- Acesse a aba **Actions** no GitHub.
+- Selecione o workflow **Build Image**.
+- Clique no botão **Run workflow**.
+
+### 3. Baixar a ISO
+1. Quando o workflow finalizar (geralmente entre 15 e 25 minutos), clique na execução concluída.
+2. No rodapé da página, na seção **Artifacts**, clique em `hyprblue-br-installer` para baixar o arquivo `.iso`.
+3. Grave a ISO em um pendrive utilizando:
+   - **Ventoy** (basta copiar o arquivo `.iso` para o pendrive)
+   - **Fedora Media Writer**
+   - **BalenaEtcher**
+   - Ou via terminal Linux:
+     ```bash
+     sudo dd if=hyprblue-br-installer.iso of=/dev/sdX bs=4M status=progress oflag=sync
+     ```
+
+### 4. Instalação e DisplayLink com Secure Boot
+O driver DisplayLink utiliza o módulo de kernel `evdi`. Se o seu computador estiver com o **Secure Boot ativado**:
+1. Durante o primeiro boot, o sistema apresentará a tela azul do **MOK Manager** (*Perform MOK management*).
+2. Selecione **Enroll MOK** → **Continue** → **Yes**.
+3. Digite a senha de enrollment: `hyprblue` (definida no workflow).
+4. Selecione **Reboot**. O módulo EVDI será carregado normalmente.
+
+---
+
+## ⚡ Alternativa: Fazer Rebase em um Fedora Atomic existente
+
+Se você já usa Fedora Silverblue, Kinoite, Bazzite ou Bluefin, pode migrar diretamente para esta imagem sem reinstalar:
+
+```bash
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/jose7570/hyprblue-br:latest
+systemctl reboot
+```
+
+---
+
+## ⌨️ Experiência Hyprland Estilo Omarchy
+
+As configurações foram injetadas em `/etc/skel/.config/` para que todo novo usuário criado na instalação já inicie com a interface pronta.
+
+### Principais Atalhos de Teclado (Keybindings)
+
+| Atalho | Ação |
 |---|---|
-| Navegadores | Brave Browser, Microsoft Edge Stable |
-| Desenvolvimento | VS Code, Neovim, Docker, Docker Compose, Ghostty |
-| KDE Apps | Kate, Okular, Dolphin, Ark, Filelight, KCalc, KeePassXC, Kleopatra, KGPG, KFind, Plasma Emoji, Spectacle, KDE Connect, KRDC |
-| Utilitários | Flameshot, BleachBit, btrfs-assistant, Firewall-config |
-| OCR | Tesseract + tesseract-langpack-por (pt-BR) |
-| Multimídia | VLC |
-| Rede | qBittorrent |
-| DisplayLink | Driver DisplayLink (evdi + DKMS) |
-
-### Apps instalados via Script (build-time)
-| App | Versão | Método |
-|---|---|---|
-| Anki | 26.08.1 | tar.zst oficial |
-| XMind | 26.05.x | RPM local em `files/rpms/` |
-| JetBrains Toolbox | latest | AppImage → `/opt/jetbrains-toolbox/` |
-
-### Flatpaks opcionais (via yafti — primeiro boot)
-- LM Studio, NotepadNext, GoldenDict-ng, Drawio, KClock, LibreOffice, Telegram, Discord, Kdenlive, GIMP, Inkscape, Steam, Lutris, Postman, DBeaver, e mais...
-
----
-
-## 🛠️ Configuração do Repositório
-
-### 1. Renomear a imagem
-
-Edite [`recipes/recipe.yml`](recipes/recipe.yml) e substitua:
-```yaml
-name: <NOME-DA-IMAGEM>    # ex: hyprblue-br
-```
-
-### 2. Adicionar o RPM do XMind
-
-Copie o arquivo RPM para a pasta antes de fazer push:
-```bash
-cp Xmind-for-Linux-x86_64bit-26.05.01106-202608091942.rpm files/rpms/
-```
-
-> ⚠️ O arquivo RPM não deve ser commitado se for grande. Considere usar Git LFS ou baixá-lo no script de CI.
-
-### 3. Configurar a assinatura cosign
-
-No seu repositório GitHub:
-```
-Settings → Secrets and variables → Actions → New repository secret
-```
-Nome: `SIGNING_SECRET`
-Valor: gere com `cosign generate-key-pair` e cole o conteúdo de `cosign.key`
-
-Ou use o comando BlueBuild CLI:
-```bash
-bluebuild generate-signing-keys
-```
-
-### 4. Habilitar GitHub Container Registry
-
-```
-Settings → Packages → Package visibility → Public
-```
+| `Super + Return` | Abre o terminal acelerado por GPU (**Ghostty**) |
+| `Super + Espaço` ou `Super + D` | Menu de aplicativos (**Rofi**) |
+| `Super + E` | Gerenciador de arquivos (**Dolphin**) |
+| `Super + B` | Navegador **Brave** |
+| `Super + Shift + B` | Navegador **Microsoft Edge** |
+| `Super + Ctrl + B` | Navegador **Google Chrome** |
+| `Super + C` | Editor de código (**VS Code**) |
+| `Super + Shift + C` | Editor de texto KDE (**Kate**) |
+| `Super + Q` | Fechar janela ativa |
+| `Super + V` | Alternar janela flutuante |
+| `Super + F` | Alternar tela cheia (*fullscreen*) |
+| `Super + N` | Abrir central de notificações (**SwayNC**) |
+| `Super + L` | Bloquear tela (**Hyprlock**) |
+| `Print` ou `Super + Shift + S` | Captura de tela com anotação (**Satty** / **Flameshot**) |
+| `Super + H/J/K/L` ou Setas | Navegação de foco entre janelas |
+| `Super + Shift + H/J/K/L` | Mover posição de janelas |
+| `Super + 1..9` | Alternar entre áreas de trabalho (Workspaces) |
+| `Super + Shift + 1..9` | Mover janela para a área de trabalho especificada |
 
 ---
 
-## 🔒 DisplayLink e Secure Boot
+## 📦 Lista Completa de Softwares Integrados
 
-O driver DisplayLink usa o módulo kernel `evdi`. Se o Secure Boot estiver ativo:
+### 1. Sistema Base & Multimídia (Camada RPM / DNF)
+- **Navegadores**: Brave Browser (`brave-browser`), Microsoft Edge (`microsoft-edge-stable`).
+- **Desenvolvimento**: VS Code (`code`), Neovim (`neovim`), Docker, Docker Compose, Git, Ghostty.
+- **Ambiente KDE & Arquivos**: Dolphin, Kate, Okular, Ark, Filelight, KCalc, KFind, Spectacle, KDE Connect, KRDC.
+- **Segurança & Senhas**: KeePassXC, Kleopatra, KGpg.
+- **Utilitários**: Flameshot, Satty, BleachBit, Btrfs Assistant (`btrfs-assistant-launcher`), Firewall-config (`firewalld GUI`).
+- **Multimídia & Torrent**: VLC Media Player (RPM Fusion), qBittorrent.
+- **DisplayLink**: Módulo de kernel `evdi` (via `akmods`) + daemon de espaço de usuário `displaylink`.
+- **OCR & Idioma**: Tesseract com modelo de idioma português (`tesseract-langpack-por`), dicionários `hunspell-pt-BR`, fontes `JetBrainsMono Nerd Font` e `Noto Sans`.
 
-1. Na primeira inicialização, o sistema pedirá para registrar um MOK
-2. Senha de enrollment: `hyprblue` (configurável em `build.yml`)
-3. Siga as instruções na tela do MOK Manager
+### 2. Softwares Instalados via Scripts no Build Time
+- **Google Chrome**: Baixado e instalado diretamente do repositório oficial do Google via `install-chrome.sh`.
+- **Anki 26.08.1**: Baixado do release oficial `anki-26.08.1-linux-x86_64.tar.zst`, extraído para `/usr/local` com atalho `.desktop` e ícone oficial.
+- **XMind 26.05.01106**: Baixado dinamicamente do CDN oficial da XMind via `install-xmind.sh` (evitando limites de tamanho de arquivo no repositório Git).
+- **JetBrains Toolbox**: Baixado da API oficial da JetBrains e configurado em `/opt/jetbrains-toolbox/` com symlink global.
+
+### 3. Flatpaks Opcionais (Assistente Yafti no Primeiro Boot)
+- **Bazaar**: A moderna e leve loja gráfica de Flatpaks (`io.github.kolunmi.Bazaar`).
+- **NotepadNext / Notepadng**: Editor avançado compatível com Notepad++ (`com.github.dail8859.NotepadNext`).
+- **GoldenDict-ng**: Dicionário avançado multilíngue (`io.github.xiaoyifang.goldendict_ng`).
+- **Draw.io**: Ferramenta completa de diagramas e fluxogramas (`com.jgraph.drawio.desktop`).
+- **Drawing (Drawy)**: Aplicativo de desenho e anotações rápidas (`com.github.maoschanz.drawing`).
+- **LM Studio**: Execução de LLMs locais (`ai.lmstudio.LMStudio`).
+- Outros: Spotify, Telegram, Discord, Slack, LibreOffice, DBeaver, Postman, Steam, Lutris, Kdenlive, GIMP.
 
 ---
 
-## 🐋 Docker pós-instalação
+## 📁 Estrutura do Repositório
 
-Para usar Docker sem `sudo`:
-```bash
-sudo usermod -aG docker $USER
-# Faça logout e login novamente
-```
-
----
-
-## 📋 Estrutura do Repositório
-
-```
+```text
 .
-├── .github/workflows/build.yml     # CI/CD: build + ISO
-├── recipes/recipe.yml              # Configuração principal BlueBuild
+├── .github/
+│   └── workflows/
+│       └── build.yml               # CI/CD: Compilação OCI + Geração da ISO instalável
+├── recipes/
+│   └── recipe.yml                  # Definição dos pacotes, repositórios e módulos BlueBuild
 ├── files/
-│   ├── rpms/                       # RPMs locais (XMind, etc.)
-│   │   └── Xmind-*.rpm             # ⚠️ Adicione manualmente
-│   └── scripts/
-│       ├── install-anki.sh         # Instala Anki 26.08.1
-│       ├── install-jetbrains-toolbox.sh
-│       └── install-xmind.sh
+│   ├── scripts/
+│   │   ├── install-anki.sh         # Instalação automatizada do Anki 26.08.1
+│   │   ├── install-chrome.sh       # Instalação oficial do Google Chrome
+│   │   ├── install-jetbrains-toolbox.sh # Instalação do JetBrains Toolbox
+│   │   └── install-xmind.sh        # Instalação do XMind via CDN oficial
+│   └── etc/
+│       └── skel/                   # Configurações padrão estilo Omarchy para novos usuários
+│           ├── .bashrc             # Shell com suporte a Wayland, Starship e Fastfetch
+│           └── .config/
+│               ├── hypr/
+│               │   └── hyprland.conf # Hyprland: atalhos, teclado ABNT2 e tema Tokyo Night
+│               ├── waybar/         # Barra superior flutuante estilo pill
+│               ├── rofi/           # Menu de aplicativos moderno
+│               ├── ghostty/        # Configuração do terminal Ghostty
+│               ├── swaync/         # Central de notificações SwayNC
+│               └── starship.toml   # Prompt minimalista
 └── config/
-    └── yafti.yml                   # Flatpaks do primeiro boot
+    └── yafti.yml                   # Assistente gráfico de primeiro boot para Flatpaks
 ```
 
 ---
 
-## 🔄 Atualizar o sistema
+## 🔄 Manutenção e Atualizações
+
+O sistema é atômico e imutável. Atualizações são baixadas em segundo plano e aplicadas no próximo reboot de forma segura:
 
 ```bash
-# Ver atualizações disponíveis
+# Verificar atualizações disponíveis
 rpm-ostree upgrade --check
 
-# Aplicar atualizações (requer reboot)
+# Aplicar atualização da imagem
 rpm-ostree upgrade
 ```
 
-O build automático acontece toda segunda-feira às 00h UTC (configurável em `.github/workflows/build.yml`).
-
----
-
-## 🙏 Créditos
-
-- [cjuniorfox/hyprland-atomic-solopasha](https://github.com/cjuniorfox/hyprland-atomic-solopasha) — Imagem base com Hyprland
-- [solopasha/hyprland](https://copr.fedorainfracloud.org/coprs/solopasha/hyprland/) — COPR Hyprland para Fedora
-- [BlueBuild](https://blue-build.org/) — Framework de build de imagens OCI
-- [Universal Blue](https://universal-blue.org/) — Infraestrutura e inspiração
+Em caso de qualquer incompatibilidade com novos drivers ou atualizações, reverta instantaneamente para o estado anterior com:
+```bash
+rpm-ostree rollback
+```

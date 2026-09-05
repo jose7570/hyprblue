@@ -1,0 +1,39 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "right",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "layer-shell": true,
+  "cssPriority": "application",
+  "control-center-margin-top": 6,
+  "control-center-margin-bottom": 6,
+  "control-center-margin-right": 6,
+  "control-center-margin-left": 6,
+  "notification-2nd-image-size": 28,
+  "notification-2nd-image-max-size": 40,
+  "widgets": [
+    "title",
+    "dnd",
+    "notifications",
+    "mpris",
+    "volume"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Notificações",
+      "clear-all-button": true,
+      "button-text": "Limpar Tudo"
+    },
+    "dnd": {
+      "text": "Não Perturbe"
+    },
+    "mpris": {
+      "image-size": 80,
+      "image-radius": 8
+    },
+    "volume": {
+      "label": ""
+    }
+  }
+}

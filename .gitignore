@@ -1,7 +1,12 @@
-# Ignorar RPMs grandes (use Git LFS ou baixe no CI se necessário)
-# Remova a linha abaixo se quiser versionar os RPMs no repositório
-# files/rpms/*.rpm
+# Ignorar RPMs grandes (>100MB são rejeitados pelo GitHub; baixados via script no build)
+files/rpms/*.rpm
 
-# Artefatos de build
+# Chaves Cosign locais (armazenadas nos Secrets do GitHub)
+*.key
+keyjoseam
+keyjoseam.pub
+
+# Artefatos de build e imagens
 *.iso
 *.img
+

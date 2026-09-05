@@ -1,0 +1,26 @@
+# =============================================================
+# Ghostty Terminal Config — Estilo Omarchy
+# =============================================================
+
+# Fonte
+font-family = "JetBrainsMono Nerd Font"
+font-size = 12.5
+font-feature = ["+calt", "+liga"]
+
+# Tema e Aparência
+theme = tokyonight
+background-opacity = 0.95
+background-blur-radius = 20
+
+# Janela
+window-padding-x = 14
+window-padding-y = 12
+window-decoration = false
+
+# Cursor
+cursor-style = bar
+cursor-style-blink = true
+
+# Integração com shell
+shell-integration = detect
+confirm-close-surface = false

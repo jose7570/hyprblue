@@ -68,14 +68,17 @@ jobs:
           echo "image_name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Build ISO
-        uses: ublue-os/isogenerator@stable
+        uses: jasonn3/build-container-installer@main
         id: isogen
         with:
-          image-name: ${{ steps.image-info.outputs.image_name }}
-          image-repo: ghcr.io/${{ github.repository_owner }}
-          image-tag: latest
-          enrollment-password: hyprblue
-          flatpak-remote-refs-dir: config/
+          arch: x86_64
+          image_name: ${{ steps.image-info.outputs.image_name }}
+          image_repo: ghcr.io/${{ github.repository_owner }}
+          image_tag: latest
+          version: "45"
+          variant: Silverblue
+          iso_name: ${{ steps.image-info.outputs.image_name }}-installer.iso
+          enrollment_password: hyprblue
 
       - name: Upload ISO as artifact
         uses: actions/upload-artifact@v4

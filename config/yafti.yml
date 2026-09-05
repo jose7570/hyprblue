@@ -14,10 +14,10 @@ screens:
     values:
       title: "Hyprland Atômico"
       description: |
-        Sua imagem Fedora Atomic imutável com Hyprland está pronta!
+        Sua imagem Fedora Atomic imutável com Hyprland e estilo Omarchy está pronta!
 
         Este assistente vai ajudá-lo a instalar aplicativos adicionais
-        via Flatpak (Flathub). Você pode pular e instalar depois.
+        via Flatpak (Flathub). Você pode marcar o que deseja ou pular.
 
   # ── Configuração do Flatpak ────────────────────────────
   can-we-modify-your-flatpaks:
@@ -46,25 +46,50 @@ screens:
         system: true
 
       groups:
+        # ── Gerenciamento de Apps ────────────────────────
+        "Lojas de Aplicativos":
+          description: "Gerenciadores gráficos de Flatpaks"
+          default: true
+          packages:
+            - Bazaar:
+                description: "Loja moderna, leve e rápida de aplicativos Flatpak"
+                flatpak: io.github.kolunmi.Bazaar
+
         # ── Inteligência Artificial ──────────────────────
         "IA & Modelos de Linguagem":
-          description: "Ferramentas de IA local"
-          default: false
+          description: "Ferramentas de IA local e produtividade"
+          default: true
           packages:
             - LM Studio:
-                description: "Interface para rodar modelos de linguagem localmente (LLM)"
-                # Nota: O Flatpak oficial do LM Studio pode não estar disponível.
-                # Se não instalar, baixe o AppImage em https://lmstudio.ai/
+                description: "Interface para rodar LLMs localmente (Llama, Mistral, Gemma)"
                 flatpak: ai.lmstudio.LMStudio
 
-        # ── Navegadores extras ────────────────────────────
-        "Navegadores":
-          description: "Navegadores web adicionais"
-          default: false
+        # ── Produtividade & Notas ────────────────────────
+        "Produtividade & Escritório":
+          description: "Editores de texto, mapas mentais e diagramas"
+          default: true
           packages:
-            - Firefox:
-                description: "Mozilla Firefox"
-                flatpak: org.mozilla.firefox
+            - NotepadNext:
+                description: "Editor de texto avançado (Notepadng / clone moderno do Notepad++)"
+                flatpak: com.github.dail8859.NotepadNext
+            - Drawio:
+                description: "Criação de diagramas e fluxogramas profissionais (Draw.io)"
+                flatpak: com.jgraph.drawio.desktop
+            - Drawing:
+                description: "Aplicativo intuitivo para desenhos e anotações rápidas (Drawy)"
+                flatpak: com.github.maoschanz.drawing
+            - LibreOffice:
+                description: "Suíte Office completa"
+                flatpak: org.libreoffice.LibreOffice
+
+        # ── Dicionário & Idiomas ─────────────────────────
+        "Dicionário & Idiomas":
+          description: "Ferramentas de referência e tradução"
+          default: true
+          packages:
+            - GoldenDict-ng:
+                description: "Dicionário avançado multi-formato de última geração"
+                flatpak: io.github.xiaoyifang.goldendict_ng
 
         # ── Comunicação ──────────────────────────────────
         "Comunicação":
@@ -72,94 +97,76 @@ screens:
           default: true
           packages:
             - Telegram:
-                description: "Mensageiro Telegram"
+                description: "Mensageiro Telegram Desktop"
                 flatpak: org.telegram.desktop
             - Discord:
-                description: "Discord — chat para comunidades"
+                description: "Discord — chat de voz, vídeo e comunidades"
                 flatpak: com.discordapp.Discord
             - Slack:
-                description: "Slack — comunicação corporativa"
+                description: "Slack — comunicação e workspaces"
                 flatpak: com.slack.Slack
 
-        # ── Produtividade ────────────────────────────────
-        "Produtividade":
-          description: "Office, mapas mentais e editores"
-          default: true
+        # ── Navegadores extras ────────────────────────────
+        "Navegadores Extras":
+          description: "Outros navegadores web"
+          default: false
           packages:
-            - LibreOffice:
-                description: "Suíte Office completa"
-                flatpak: org.libreoffice.LibreOffice
-            - NotepadNext:
-                description: "Editor de texto avançado (clone do Notepad++)"
-                flatpak: com.github.dail8859.NotepadNext
-            - Drawio (Diagrams.net):
-                description: "Criação de diagramas e fluxogramas"
-                flatpak: com.jgraph.drawio.desktop
-
-        # ── Dicionário & Tradução ─────────────────────────
-        "Dicionário & Tradução":
-          description: "Ferramentas de idioma"
-          default: true
-          packages:
-            - GoldenDict-ng:
-                description: "Dicionário avançado multi-formato"
-                flatpak: io.github.xiaoyifang.goldendict_ng
+            - Firefox:
+                description: "Mozilla Firefox oficial Flatpak"
+                flatpak: org.mozilla.firefox
 
         # ── Desenvolvimento ────────────────────────────────
         "Desenvolvimento":
-          description: "Ferramentas extras para desenvolvedores"
+          description: "Clientes de banco de dados e teste de APIs"
           default: false
           packages:
-            - Postman:
-                description: "Teste de APIs REST"
-                flatpak: com.getpostman.Postman
             - DBeaver Community:
-                description: "Cliente de banco de dados universal"
+                description: "Cliente de banco de dados universal (SQL, Postgres, MySQL, etc.)"
                 flatpak: io.dbeaver.DBeaverCommunity
+            - Postman:
+                description: "Plataforma de teste e desenvolvimento de APIs"
+                flatpak: com.getpostman.Postman
             - Insomnia:
-                description: "Cliente REST e GraphQL"
+                description: "Cliente REST e GraphQL leve"
                 flatpak: rest.insomnia.Insomnia
 
         # ── Multimídia ────────────────────────────────────
-        "Multimídia":
-          description: "Players e editores de mídia"
+        "Multimídia & Design":
+          description: "Áudio, vídeo e gráficos"
           default: false
           packages:
             - Spotify:
-                description: "Streaming de música"
+                description: "Player de streaming de música Spotify"
                 flatpak: com.spotify.Client
             - Kdenlive:
                 description: "Editor de vídeo profissional"
                 flatpak: org.kde.kdenlive
             - GIMP:
-                description: "Editor de imagens"
+                description: "Editor avançado de imagens e fotos"
                 flatpak: org.gimp.GIMP
             - Inkscape:
-                description: "Editor de gráficos vetoriais"
+                description: "Editor de gráficos vetoriais SVG"
                 flatpak: org.inkscape.Inkscape
 
         # ── Utilitários KDE extras ─────────────────────────
         "Utilitários KDE":
-          description: "Apps KDE não inclusos no sistema base"
+          description: "Apps KDE adicionais"
           default: true
           packages:
             - KClock:
-                description: "Relógio, alarmes e cronômetro"
+                description: "Relógio mundial, alarmes e cronômetro"
                 flatpak: org.kde.kclock
-            - KCalc:
-                description: "Calculadora científica KDE (versão Flatpak)"
-                flatpak: org.kde.kcalc
 
         # ── Jogos ─────────────────────────────────────────
         "Jogos":
-          description: "Plataformas e utilitários de jogos"
+          description: "Plataformas de games"
           default: false
           packages:
             - Steam:
-                description: "Plataforma Steam"
+                description: "Plataforma Steam da Valve"
                 flatpak: com.valvesoftware.Steam
             - Lutris:
-                description: "Gerenciador de jogos (Wine, GOG, etc.)"
+                description: "Gerenciador de jogos (Wine, GOG, Epic)"
                 flatpak: net.lutris.Lutris
 
   # ── Tela final ────────────────────────────────────────
@@ -168,13 +175,21 @@ screens:
     values:
       title: "Tudo pronto! 🎉"
       description: |
-        Instalação concluída.
+        Configuração concluída com sucesso.
 
-        📌 Dicas:
+        📌 Dicas Importantes:
+        • O Hyprland já está configurado no estilo Omarchy com teclado ABNT2.
+        • Atalhos principais:
+          - Super + Return : Ghostty (terminal)
+          - Super + Espaço : Rofi (menu de aplicativos)
+          - Super + E      : Dolphin (arquivos)
+          - Super + B      : Brave Browser
+          - Super + C      : VS Code
+          - Super + Print  : Flameshot / Captura
+        • Para gerenciar Flatpaks graficamente, abra o Bazaar.
         • Para adicionar seu usuário ao grupo docker:
           sudo usermod -aG docker $USER  (requer logout)
-        • Para instalar o LM Studio manualmente:
-          Acesse https://lmstudio.ai/ e baixe o AppImage
-        • JetBrains Toolbox está em /opt/jetbrains-toolbox/
+        • JetBrains Toolbox está instalado em /opt/jetbrains-toolbox/
+        • Anki e XMind estão disponíveis no menu de aplicativos.
 
-        Aproveite o Hyprland Atômico! 🪁
+        Aproveite o seu Fedora Atômico com Hyprland! 🪁

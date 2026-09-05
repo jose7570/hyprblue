@@ -7,19 +7,28 @@
 # =============================================================
 set -euo pipefail
 
-# O BlueBuild copia files/ para /tmp/files/ durante o build.
-# Ajuste o caminho conforme necessário.
-RPM_DIR="/tmp/files/rpms"
-XMIND_RPM=$(find "${RPM_DIR}" -name "Xmind-*.rpm" | head -1)
+# URL oficial do XMind especificada pelo usuário
+XMIND_URL="https://dl3.xmind.net/Xmind-for-Linux-x86_64bit-26.05.01106-202608091942.rpm"
 
-if [ -z "${XMIND_RPM}" ]; then
-    echo "AVISO: RPM do XMind não encontrado em ${RPM_DIR}." >&2
-    echo "       Coloque o arquivo Xmind-for-Linux-x86_64bit-*.rpm na pasta files/rpms/" >&2
-    echo "       O XMind NÃO será instalado neste build." >&2
-    exit 0
+# O BlueBuild copia files/ para /tmp/files/ durante o build se existirem
+RPM_DIR="/tmp/files/rpms"
+XMIND_RPM=""
+
+if [ -d "${RPM_DIR}" ]; then
+    XMIND_RPM=$(find "${RPM_DIR}" -name "Xmind-*.rpm" 2>/dev/null | head -1 || true)
 fi
 
-echo "==> Instalando XMind de: ${XMIND_RPM}"
-dnf install -y "${XMIND_RPM}"
+if [ -n "${XMIND_RPM}" ] && [ -f "${XMIND_RPM}" ]; then
+    echo "==> Instalando XMind a partir do arquivo local: ${XMIND_RPM}"
+    dnf install -y "${XMIND_RPM}"
+else
+    echo "==> RPM local do XMind não encontrado. Baixando do CDN oficial..."
+    TMP_RPM="$(mktemp --suffix=.rpm)"
+    curl -fsSL --retry 3 "${XMIND_URL}" -o "${TMP_RPM}"
+    echo "==> Instalando XMind..."
+    dnf install -y "${TMP_RPM}"
+    rm -f "${TMP_RPM}"
+fi
 
 echo "==> XMind instalado com sucesso!"
+

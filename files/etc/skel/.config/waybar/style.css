@@ -1,0 +1,122 @@
+/* =============================================================
+   Waybar Style — Estilo Omarchy / Tokyo Night
+   ============================================================= */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: transparent;
+    color: #c0caf5;
+}
+
+/* ── Módulos em formato de pílulas flutuantes ───────────── */
+#workspaces,
+#window,
+#clock,
+#cpu,
+#memory,
+#battery,
+#pulseaudio,
+#tray,
+#custom-notification,
+#custom-power {
+    background: rgba(26, 27, 38, 0.85);
+    padding: 2px 12px;
+    margin: 3px 2px;
+    border-radius: 12px;
+    border: 1px solid rgba(65, 72, 104, 0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Workspaces ─────────────────────────────────────────── */
+#workspaces button {
+    padding: 0 6px;
+    color: #565f89;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+#workspaces button.active {
+    color: #7aa2f7;
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    color: #f7768e;
+}
+
+#workspaces button:hover {
+    background: rgba(122, 162, 247, 0.15);
+    color: #bb9af7;
+}
+
+/* ── Módulos específicos ────────────────────────────────── */
+#clock {
+    color: #7dcfff;
+    font-weight: bold;
+}
+
+#cpu {
+    color: #9ece6a;
+}
+
+#memory {
+    color: #e0af68;
+}
+
+#pulseaudio {
+    color: #bb9af7;
+}
+
+#pulseaudio.muted {
+    color: #f7768e;
+}
+
+#battery {
+    color: #7aa2f7;
+}
+
+#battery.charging {
+    color: #73daca;
+}
+
+#battery.warning:not(.charging) {
+    color: #e0af68;
+}
+
+#battery.critical:not(.charging) {
+    color: #f7768e;
+    animation-name: blink;
+    animation-duration: 0.8s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#custom-notification {
+    color: #e0af68;
+}
+
+#custom-power {
+    color: #f7768e;
+    padding-right: 14px;
+    padding-left: 14px;
+}
+
+#custom-power:hover {
+    background-color: #f7768e;
+    color: #1a1b26;
+}
+
+@keyframes blink {
+    to {
+        background-color: #f7768e;
+        color: #1a1b26;
+    }
+}

@@ -1,12 +1,14 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 # ============================================================
-# ATENÇÃO: Substitua <SEU-USUARIO> pelo seu usuário do GitHub
-#          e <NOME-DA-IMAGEM> pelo nome desejado (ex: hyprblue-br)
+# Hyprland Atômico (Fedora Atomic 45)
+# Hyprland + DisplayLink + Estilo Omarchy + pt-BR
+# Repositório: jose7570/hyprblue
 # ============================================================
-name: <NOME-DA-IMAGEM>
+name: hyprblue-br
 description: >
-  Fedora Atomic 45 com Hyprland, DisplayLink, locale pt-BR e
-  conjunto completo de apps para desenvolvimento e produtividade.
+  Fedora Atomic 45 com Hyprland, DisplayLink (EVDI), ambiente estilo Omarchy,
+  suporte completo ao idioma pt-BR (teclado ABNT2) e suite completa de desenvolvimento,
+  navegadores e produtividade.
 base-image: ghcr.io/cjuniorfox/hyprland-atomic-solopasha
 image-version: 45
 
@@ -20,12 +22,20 @@ modules:
       ID: fedora
       VARIANT: Hyprland Atômico
       VARIANT_ID: hyprland-atomic
-      PRETTY_NAME: "Fedora Atomic 45 (Hyprland)"
+      PRETTY_NAME: "Fedora Atomic 45 (Hyprland + Omarchy)"
       HOME_URL: "https://fedoraproject.org/"
       DOCUMENTATION_URL: "https://docs.fedoraproject.org/"
 
   # ──────────────────────────────────────────────
-  # 2. RPMFusion (codecs, drivers extras)
+  # 2. Kernel Modules (DisplayLink / EVDI)
+  # ──────────────────────────────────────────────
+  - type: akmods
+    base: main
+    install:
+      - evdi
+
+  # ──────────────────────────────────────────────
+  # 3. RPMFusion (codecs e drivers extras)
   # ──────────────────────────────────────────────
   - type: dnf
     repos:
@@ -33,20 +43,23 @@ modules:
         - rpmfusion
 
   # ──────────────────────────────────────────────
-  # 3. Repositórios externos e pacotes base
+  # 4. Repositórios externos e pacotes do sistema
   # ──────────────────────────────────────────────
   - type: dnf
     repos:
       copr:
-        - crashdummy/Displaylink     # Driver DisplayLink (evdi + displaylink)
-        - scottames/ghostty          # Ghostty terminal
+        - crashdummy/Displaylink     # Daemon de espaço de usuário do DisplayLink
+        - scottames/ghostty          # Ghostty terminal acelerado por GPU
+        - tofik/nwg-shell            # Ferramentas Wayland complementares
+        - atim/starship-fedora       # Prompt moderno Starship
 
-      # Repos via arquivo .repo
+      # Repos oficiais via .repo
       urls:
         # Brave Browser (oficial)
         - https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-        # Microsoft Edge + VS Code (mesmo repo)
+        # Microsoft Edge
         - https://packages.microsoft.com/yumrepos/edge/config.repo
+        # VS Code
         - https://packages.microsoft.com/yumrepos/vscode/config.repo
 
       # Chaves GPG dos repos Microsoft
@@ -54,11 +67,11 @@ modules:
         - https://packages.microsoft.com/keys/microsoft.asc
 
     install:
-      # ── Browsers ──────────────────────────────
+      # ── Navegadores ───────────────────────────
       - brave-browser
       - microsoft-edge-stable
 
-      # ── Desenvolvimento ────────────────────────
+      # ── Desenvolvimento ───────────────────────
       - code                        # VS Code
       - neovim
       - docker
@@ -68,37 +81,55 @@ modules:
       - wget
       - tar
       - zstd
-      - fuse-libs                   # Necessário para AppImages
+      - fuse-libs                   # Suporte a AppImages
 
-      # ── Terminal / Shell ──────────────────────
+      # ── Terminal / Shell / Prompt ─────────────
       - ghostty
+      - starship
+      - fastfetch
+
+      # ── Ambiente Hyprland & Estilo Omarchy ────
+      - waybar
+      - rofi-wayland
+      - swaynotificationcenter      # SwayNC
+      - swaybg
+      - hyprlock
+      - hypridle
+      - wl-clipboard
+      - cliphist
+      - grim
+      - slurp
+      - satty                       # Anotação de tela para Wayland
+      - brightnessctl
+      - pavucontrol
+      - network-manager-applet
+      - blueman
+      - polkit-kde                  # Agente Polkit gráfico
 
       # ── DisplayLink ───────────────────────────
       - displaylink
 
-      # ── Editores / Produtividade ──────────────
+      # ── Editores e Visualizadores ─────────────
       - kate
       - okular
 
-      # ── Utilitários de sistema ────────────────
+      # ── Utilitários do Sistema ────────────────
       - flameshot
       - bleachbit
       - btrfs-assistant
       - firewall-config
 
-      # ── OCR ──────────────────────────────────
+      # ── OCR (Tesseract + pt-BR) ───────────────
       - tesseract
-      - tesseract-langpack-por      # Tesseract pt-BR
+      - tesseract-langpack-por
 
-      # ── Multimídia ───────────────────────────
+      # ── Multimídia e Rede ─────────────────────
       - vlc
-
-      # ── Rede / Torrent ────────────────────────
       - qbittorrent
       - kdeconnect
       - krdc
 
-      # ── KDE / Plasma apps ────────────────────
+      # ── Apps KDE / Segurança ──────────────────
       - dolphin
       - ark
       - filelight
@@ -110,13 +141,19 @@ modules:
       - plasma-emojier
       - spectacle
 
-      # ── Fontes e locale ──────────────────────
+      # ── Fontes, Ícones e Locale pt-BR ─────────
       - google-noto-fonts-common
       - google-noto-sans-fonts
+      - google-noto-color-emoji-fonts
+      - jetbrains-mono-nerd-fonts
+      - fira-code-nerd-fonts
+      - fontawesome-fonts-all
       - langpacks-pt_BR
+      - glibc-langpack-pt
+      - hunspell-pt-BR
 
   # ──────────────────────────────────────────────
-  # 4. Locale pt-BR como padrão do sistema
+  # 5. Locale pt-BR como padrão do sistema
   # ──────────────────────────────────────────────
   - type: script
     snippets:
@@ -131,33 +168,40 @@ modules:
         fi
 
   # ──────────────────────────────────────────────
-  # 5. Anki 26.08.1 (tar.zst — sem RPM oficial)
+  # 6. Google Chrome (RPM oficial via CDN)
+  # ──────────────────────────────────────────────
+  - type: script
+    scripts:
+      - install-chrome.sh
+
+  # ──────────────────────────────────────────────
+  # 7. Anki 26.08.1 (tar.zst oficial)
   # ──────────────────────────────────────────────
   - type: script
     scripts:
       - install-anki.sh
 
   # ──────────────────────────────────────────────
-  # 6. JetBrains Toolbox (AppImage → /opt)
+  # 8. JetBrains Toolbox (AppImage → /opt)
   # ──────────────────────────────────────────────
   - type: script
     scripts:
       - install-jetbrains-toolbox.sh
 
   # ──────────────────────────────────────────────
-  # 7. XMind (RPM local em files/rpms/)
+  # 9. XMind 26.05.01106 (RPM oficial via CDN)
   # ──────────────────────────────────────────────
   - type: script
     scripts:
       - install-xmind.sh
 
   # ──────────────────────────────────────────────
-  # 8. Docker: adicionar grupo + habilitar serviço
+  # 10. Docker & Serviços Systemd
   # ──────────────────────────────────────────────
   - type: script
     snippets:
       - |
-        # Garante que o grupo docker existe (usuário adiciona-se via firstboot)
+        # Garante a existência do grupo docker
         groupadd -r docker 2>/dev/null || true
 
   - type: systemd
@@ -165,15 +209,16 @@ modules:
       enabled:
         - docker.service
         - docker.socket
+        - displaylink.service
 
   # ──────────────────────────────────────────────
-  # 9. Yafti — Instalador de primeiro boot
-  #    (Flatpaks opcionais selecionados pelo usuário)
+  # 11. Yafti — Instalador de Primeiro Boot
+  #     (Bazaar, NotepadNext, LM Studio, etc.)
   # ──────────────────────────────────────────────
   - type: yafti
     include-default-config: false
 
   # ──────────────────────────────────────────────
-  # 10. Assinatura cosign da imagem
+  # 12. Assinatura cosign da imagem
   # ──────────────────────────────────────────────
   - type: signing
