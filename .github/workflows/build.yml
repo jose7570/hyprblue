@@ -1,0 +1,86 @@
+name: Build Image
+
+on:
+  push:
+    branches:
+      - main
+      - live
+    paths-ignore:
+      - "**.md"
+      - "**.txt"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "**.txt"
+  schedule:
+    # Rebuild toda semana (segunda-feira às 00h UTC)
+    - cron: "0 0 * * MON"
+  workflow_dispatch:
+
+env:
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  bluebuild:
+    name: Build Custom Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Image
+        uses: blue-build/github-action@v1.8
+        with:
+          recipe: recipe.yml
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          use_unstable_release: false
+
+  iso:
+    name: Generate Installer ISO
+    needs: bluebuild
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine image name from recipe
+        id: image-info
+        run: |
+          IMAGE_NAME=$(grep '^name:' recipes/recipe.yml | awk '{print $2}')
+          echo "image_name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Build ISO
+        uses: ublue-os/isogenerator@stable
+        id: isogen
+        with:
+          image-name: ${{ steps.image-info.outputs.image_name }}
+          image-repo: ghcr.io/${{ github.repository_owner }}
+          image-tag: latest
+          enrollment-password: hyprblue
+          flatpak-remote-refs-dir: config/
+
+      - name: Upload ISO as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.image-info.outputs.image_name }}-installer
+          path: ${{ steps.isogen.outputs.iso-path }}
+          retention-days: 14
+          compression-level: 0

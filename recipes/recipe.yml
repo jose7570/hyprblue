@@ -1,0 +1,179 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# ============================================================
+# ATENÇÃO: Substitua <SEU-USUARIO> pelo seu usuário do GitHub
+#          e <NOME-DA-IMAGEM> pelo nome desejado (ex: hyprblue-br)
+# ============================================================
+name: <NOME-DA-IMAGEM>
+description: >
+  Fedora Atomic 45 com Hyprland, DisplayLink, locale pt-BR e
+  conjunto completo de apps para desenvolvimento e produtividade.
+base-image: ghcr.io/cjuniorfox/hyprland-atomic-solopasha
+image-version: 45
+
+modules:
+
+  # ──────────────────────────────────────────────
+  # 1. Identidade do sistema operacional
+  # ──────────────────────────────────────────────
+  - type: os-release
+    extra-fields:
+      ID: fedora
+      VARIANT: Hyprland Atômico
+      VARIANT_ID: hyprland-atomic
+      PRETTY_NAME: "Fedora Atomic 45 (Hyprland)"
+      HOME_URL: "https://fedoraproject.org/"
+      DOCUMENTATION_URL: "https://docs.fedoraproject.org/"
+
+  # ──────────────────────────────────────────────
+  # 2. RPMFusion (codecs, drivers extras)
+  # ──────────────────────────────────────────────
+  - type: dnf
+    repos:
+      nonfree:
+        - rpmfusion
+
+  # ──────────────────────────────────────────────
+  # 3. Repositórios externos e pacotes base
+  # ──────────────────────────────────────────────
+  - type: dnf
+    repos:
+      copr:
+        - crashdummy/Displaylink     # Driver DisplayLink (evdi + displaylink)
+        - scottames/ghostty          # Ghostty terminal
+
+      # Repos via arquivo .repo
+      urls:
+        # Brave Browser (oficial)
+        - https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+        # Microsoft Edge + VS Code (mesmo repo)
+        - https://packages.microsoft.com/yumrepos/edge/config.repo
+        - https://packages.microsoft.com/yumrepos/vscode/config.repo
+
+      # Chaves GPG dos repos Microsoft
+      keys:
+        - https://packages.microsoft.com/keys/microsoft.asc
+
+    install:
+      # ── Browsers ──────────────────────────────
+      - brave-browser
+      - microsoft-edge-stable
+
+      # ── Desenvolvimento ────────────────────────
+      - code                        # VS Code
+      - neovim
+      - docker
+      - docker-compose
+      - git
+      - curl
+      - wget
+      - tar
+      - zstd
+      - fuse-libs                   # Necessário para AppImages
+
+      # ── Terminal / Shell ──────────────────────
+      - ghostty
+
+      # ── DisplayLink ───────────────────────────
+      - displaylink
+
+      # ── Editores / Produtividade ──────────────
+      - kate
+      - okular
+
+      # ── Utilitários de sistema ────────────────
+      - flameshot
+      - bleachbit
+      - btrfs-assistant
+      - firewall-config
+
+      # ── OCR ──────────────────────────────────
+      - tesseract
+      - tesseract-langpack-por      # Tesseract pt-BR
+
+      # ── Multimídia ───────────────────────────
+      - vlc
+
+      # ── Rede / Torrent ────────────────────────
+      - qbittorrent
+      - kdeconnect
+      - krdc
+
+      # ── KDE / Plasma apps ────────────────────
+      - dolphin
+      - ark
+      - filelight
+      - kcalc
+      - keepassxc
+      - kleopatra
+      - kgpg
+      - kfind
+      - plasma-emojier
+      - spectacle
+
+      # ── Fontes e locale ──────────────────────
+      - google-noto-fonts-common
+      - google-noto-sans-fonts
+      - langpacks-pt_BR
+
+  # ──────────────────────────────────────────────
+  # 4. Locale pt-BR como padrão do sistema
+  # ──────────────────────────────────────────────
+  - type: script
+    snippets:
+      - |
+        # Configura locale pt_BR.UTF-8 como padrão do sistema
+        localectl set-locale LANG=pt_BR.UTF-8 || \
+          echo "LANG=pt_BR.UTF-8" > /etc/locale.conf
+        # Adiciona suporte a pt-BR no /etc/locale.gen se existir
+        if [ -f /etc/locale.gen ]; then
+          echo "pt_BR.UTF-8 UTF-8" >> /etc/locale.gen
+          locale-gen || true
+        fi
+
+  # ──────────────────────────────────────────────
+  # 5. Anki 26.08.1 (tar.zst — sem RPM oficial)
+  # ──────────────────────────────────────────────
+  - type: script
+    scripts:
+      - install-anki.sh
+
+  # ──────────────────────────────────────────────
+  # 6. JetBrains Toolbox (AppImage → /opt)
+  # ──────────────────────────────────────────────
+  - type: script
+    scripts:
+      - install-jetbrains-toolbox.sh
+
+  # ──────────────────────────────────────────────
+  # 7. XMind (RPM local em files/rpms/)
+  # ──────────────────────────────────────────────
+  - type: script
+    scripts:
+      - install-xmind.sh
+
+  # ──────────────────────────────────────────────
+  # 8. Docker: adicionar grupo + habilitar serviço
+  # ──────────────────────────────────────────────
+  - type: script
+    snippets:
+      - |
+        # Garante que o grupo docker existe (usuário adiciona-se via firstboot)
+        groupadd -r docker 2>/dev/null || true
+
+  - type: systemd
+    system:
+      enabled:
+        - docker.service
+        - docker.socket
+
+  # ──────────────────────────────────────────────
+  # 9. Yafti — Instalador de primeiro boot
+  #    (Flatpaks opcionais selecionados pelo usuário)
+  # ──────────────────────────────────────────────
+  - type: yafti
+    include-default-config: false
+
+  # ──────────────────────────────────────────────
+  # 10. Assinatura cosign da imagem
+  # ──────────────────────────────────────────────
+  - type: signing

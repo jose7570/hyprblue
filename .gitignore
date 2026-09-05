@@ -1,0 +1,7 @@
+# Ignorar RPMs grandes (use Git LFS ou baixe no CI se necessário)
+# Remova a linha abaixo se quiser versionar os RPMs no repositório
+# files/rpms/*.rpm
+
+# Artefatos de build
+*.iso
+*.img

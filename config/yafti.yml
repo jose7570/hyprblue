@@ -1,0 +1,180 @@
+# =============================================================
+# yafti.yml — Instalador de Primeiro Boot (Yet Another First-Time Installer)
+# Apresenta uma seleção de Flatpaks opcionais na primeira vez
+# que o usuário faz login após a instalação.
+# =============================================================
+title: "Bem-vindo ao Hyprland Atômico! 🪁"
+properties:
+  mode: "run-on-change"
+
+screens:
+  # ── Tela de boas-vindas ─────────────────────────────────
+  first-screen:
+    source: yafti.screen.welcome
+    values:
+      title: "Hyprland Atômico"
+      description: |
+        Sua imagem Fedora Atomic imutável com Hyprland está pronta!
+
+        Este assistente vai ajudá-lo a instalar aplicativos adicionais
+        via Flatpak (Flathub). Você pode pular e instalar depois.
+
+  # ── Configuração do Flatpak ────────────────────────────
+  can-we-modify-your-flatpaks:
+    source: yafti.screen.consent
+    values:
+      title: "Configurar Flatpak"
+      condition:
+        run: flatpak remotes --columns=name | grep -q "flathub"
+        invert: true
+      description: |
+        Precisamos adicionar o repositório Flathub para instalar apps.
+      actions:
+        - run: >-
+            flatpak remote-add --if-not-exists flathub
+            https://flathub.org/repo/flathub.flatpakrepo
+
+  # ── Seleção de aplicativos ─────────────────────────────
+  applications:
+    source: yafti.screen.package
+    values:
+      title: "Instalar Aplicativos"
+      show_terminal: true
+      package_manager: yafti.plugin.flatpak
+      package_manager_defaults:
+        user: false
+        system: true
+
+      groups:
+        # ── Inteligência Artificial ──────────────────────
+        "IA & Modelos de Linguagem":
+          description: "Ferramentas de IA local"
+          default: false
+          packages:
+            - LM Studio:
+                description: "Interface para rodar modelos de linguagem localmente (LLM)"
+                # Nota: O Flatpak oficial do LM Studio pode não estar disponível.
+                # Se não instalar, baixe o AppImage em https://lmstudio.ai/
+                flatpak: ai.lmstudio.LMStudio
+
+        # ── Navegadores extras ────────────────────────────
+        "Navegadores":
+          description: "Navegadores web adicionais"
+          default: false
+          packages:
+            - Firefox:
+                description: "Mozilla Firefox"
+                flatpak: org.mozilla.firefox
+
+        # ── Comunicação ──────────────────────────────────
+        "Comunicação":
+          description: "Mensageiros e colaboração"
+          default: true
+          packages:
+            - Telegram:
+                description: "Mensageiro Telegram"
+                flatpak: org.telegram.desktop
+            - Discord:
+                description: "Discord — chat para comunidades"
+                flatpak: com.discordapp.Discord
+            - Slack:
+                description: "Slack — comunicação corporativa"
+                flatpak: com.slack.Slack
+
+        # ── Produtividade ────────────────────────────────
+        "Produtividade":
+          description: "Office, mapas mentais e editores"
+          default: true
+          packages:
+            - LibreOffice:
+                description: "Suíte Office completa"
+                flatpak: org.libreoffice.LibreOffice
+            - NotepadNext:
+                description: "Editor de texto avançado (clone do Notepad++)"
+                flatpak: com.github.dail8859.NotepadNext
+            - Drawio (Diagrams.net):
+                description: "Criação de diagramas e fluxogramas"
+                flatpak: com.jgraph.drawio.desktop
+
+        # ── Dicionário & Tradução ─────────────────────────
+        "Dicionário & Tradução":
+          description: "Ferramentas de idioma"
+          default: true
+          packages:
+            - GoldenDict-ng:
+                description: "Dicionário avançado multi-formato"
+                flatpak: io.github.xiaoyifang.goldendict_ng
+
+        # ── Desenvolvimento ────────────────────────────────
+        "Desenvolvimento":
+          description: "Ferramentas extras para desenvolvedores"
+          default: false
+          packages:
+            - Postman:
+                description: "Teste de APIs REST"
+                flatpak: com.getpostman.Postman
+            - DBeaver Community:
+                description: "Cliente de banco de dados universal"
+                flatpak: io.dbeaver.DBeaverCommunity
+            - Insomnia:
+                description: "Cliente REST e GraphQL"
+                flatpak: rest.insomnia.Insomnia
+
+        # ── Multimídia ────────────────────────────────────
+        "Multimídia":
+          description: "Players e editores de mídia"
+          default: false
+          packages:
+            - Spotify:
+                description: "Streaming de música"
+                flatpak: com.spotify.Client
+            - Kdenlive:
+                description: "Editor de vídeo profissional"
+                flatpak: org.kde.kdenlive
+            - GIMP:
+                description: "Editor de imagens"
+                flatpak: org.gimp.GIMP
+            - Inkscape:
+                description: "Editor de gráficos vetoriais"
+                flatpak: org.inkscape.Inkscape
+
+        # ── Utilitários KDE extras ─────────────────────────
+        "Utilitários KDE":
+          description: "Apps KDE não inclusos no sistema base"
+          default: true
+          packages:
+            - KClock:
+                description: "Relógio, alarmes e cronômetro"
+                flatpak: org.kde.kclock
+            - KCalc:
+                description: "Calculadora científica KDE (versão Flatpak)"
+                flatpak: org.kde.kcalc
+
+        # ── Jogos ─────────────────────────────────────────
+        "Jogos":
+          description: "Plataformas e utilitários de jogos"
+          default: false
+          packages:
+            - Steam:
+                description: "Plataforma Steam"
+                flatpak: com.valvesoftware.Steam
+            - Lutris:
+                description: "Gerenciador de jogos (Wine, GOG, etc.)"
+                flatpak: net.lutris.Lutris
+
+  # ── Tela final ────────────────────────────────────────
+  final-screen:
+    source: yafti.screen.title
+    values:
+      title: "Tudo pronto! 🎉"
+      description: |
+        Instalação concluída.
+
+        📌 Dicas:
+        • Para adicionar seu usuário ao grupo docker:
+          sudo usermod -aG docker $USER  (requer logout)
+        • Para instalar o LM Studio manualmente:
+          Acesse https://lmstudio.ai/ e baixe o AppImage
+        • JetBrains Toolbox está em /opt/jetbrains-toolbox/
+
+        Aproveite o Hyprland Atômico! 🪁
