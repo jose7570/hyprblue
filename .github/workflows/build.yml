@@ -75,7 +75,7 @@ jobs:
           image_name: ${{ steps.image-info.outputs.image_name }}
           image_repo: ghcr.io/${{ github.repository_owner }}
           image_tag: latest
-          version: "45"
+          version: "44"
           variant: Silverblue
           iso_name: ${{ steps.image-info.outputs.image_name }}-installer.iso
           enrollment_password: hyprblue
