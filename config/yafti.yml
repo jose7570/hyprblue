@@ -23,16 +23,37 @@ screens:
   can-we-modify-your-flatpaks:
     source: yafti.screen.consent
     values:
-      title: "Configurar Flatpak"
+      title: Welcome, Traveler!
       condition:
-        run: flatpak remotes --columns=name | grep -q "flathub"
-        invert: true
+        run: flatpak remotes --columns=name | grep fedora
       description: |
-        Precisamos adicionar o repositório Flathub para instalar apps.
+        We have detected the limited, Fedora-provided Flatpak remote on your system, whose applications are usually missing important codecs and other features. This step will therefore remove all basic Fedora Flatpaks from your system! We will instead switch all core Flatpak applications over to the vastly superior, unfiltered Flathub. If you don't want to do this, simply exit this installer.
       actions:
-        - run: >-
-            flatpak remote-add --if-not-exists flathub
-            https://flathub.org/repo/flathub.flatpakrepo
+        - run: flatpak remote-delete --system --force fedora
+        - run: flatpak remote-delete --user --force fedora
+        - run: flatpak remove --system --noninteractive --all
+        - run: flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo
+        - run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+  check-system-flathub:
+    source: yafti.screen.consent
+    values:
+      title: Missing Flathub Repository (System)
+      condition:
+        run: flatpak remotes --system --columns=name | grep flathub | wc -l | grep '^0$'
+      description: |
+        We have detected that you don't have Flathub's repository on your system. We will now add that repository to your system-wide list.
+      actions:
+        - run: flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo
+  check-user-flathub:
+    source: yafti.screen.consent
+    values:
+      title: Missing Flathub Repository (User)
+      condition:
+        run: flatpak remotes --user --columns=name | grep flathub | wc -l | grep '^0$'
+      description: |
+        We have detected that you don't have Flathub's repository on your current user account. We will now add that repository to your account.
+      actions:
+        - run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
 
   # ── Seleção de aplicativos ─────────────────────────────
   applications:
@@ -56,40 +77,40 @@ screens:
                 flatpak: io.github.kolunmi.Bazaar
 
         # ── Inteligência Artificial ──────────────────────
-        "IA & Modelos de Linguagem":
-          description: "Ferramentas de IA local e produtividade"
-          default: true
-          packages:
-            - LM Studio:
-                description: "Interface para rodar LLMs localmente (Llama, Mistral, Gemma)"
-                flatpak: ai.lmstudio.LMStudio
+        #"IA & Modelos de Linguagem":
+        #  description: "Ferramentas de IA local e produtividade"
+        # default: true
+        #  packages:
+        #    - LM Studio:
+        #        description: "Interface para rodar LLMs localmente (Llama, Mistral, Gemma)"
+        #        flatpak: ai.lmstudio.LMStudio
 
         # ── Produtividade & Notas ────────────────────────
-        "Produtividade & Escritório":
-          description: "Editores de texto, mapas mentais e diagramas"
-          default: true
-          packages:
-            - NotepadNext:
-                description: "Editor de texto avançado (Notepadng / clone moderno do Notepad++)"
-                flatpak: com.github.dail8859.NotepadNext
+       # "Produtividade & Escritório":
+       #   description: "Editores de texto, mapas mentais e diagramas"
+       #   default: true
+       #   packages:
+       #     - NotepadNext:
+        #        description: "Editor de texto avançado (Notepadng / clone moderno do Notepad++)"
+        #        flatpak: com.github.dail8859.NotepadNext
             #- Drawio:
             #    description: "Criação de diagramas e fluxogramas profissionais (Draw.io)"
             #    flatpak: com.jgraph.drawio.desktop
-            - Drawing:
-                description: "Aplicativo intuitivo para desenhos e anotações rápidas (Drawy)"
-                flatpak: com.github.maoschanz.drawing
-            - LibreOffice:
-                description: "Suíte Office completa"
-                flatpak: org.libreoffice.LibreOffice
+            #- Drawing:
+            #    description: "Aplicativo intuitivo para desenhos e anotações rápidas (Drawy)"
+             #   flatpak: com.github.maoschanz.drawing
+            #- LibreOffice:
+            #    description: "Suíte Office completa"
+             #   flatpak: org.libreoffice.LibreOffice
 
         # ── Dicionário & Idiomas ─────────────────────────
-        "Dicionário & Idiomas":
-          description: "Ferramentas de referência e tradução"
-          default: true
-          packages:
-            - GoldenDict-ng:
-                description: "Dicionário avançado multi-formato de última geração"
-                flatpak: io.github.xiaoyifang.goldendict_ng
+        #"Dicionário & Idiomas":
+        #  description: "Ferramentas de referência e tradução"
+        #  default: true
+        #  packages:
+        #    - GoldenDict-ng:
+        #        description: "Dicionário avançado multi-formato de última geração"
+        #        flatpak: io.github.xiaoyifang.goldendict_ng
 
         # ── Comunicação ──────────────────────────────────
        # "Comunicação":
@@ -116,19 +137,19 @@ screens:
          #       flatpak: org.mozilla.firefox
 
         # ── Desenvolvimento ────────────────────────────────
-        "Desenvolvimento":
-          description: "Clientes de banco de dados e teste de APIs"
-          default: false
-          packages:
-            - DBeaver Community:
-                description: "Cliente de banco de dados universal (SQL, Postgres, MySQL, etc.)"
-                flatpak: io.dbeaver.DBeaverCommunity
-            - Postman:
-                description: "Plataforma de teste e desenvolvimento de APIs"
-                flatpak: com.getpostman.Postman
-            - Insomnia:
-                description: "Cliente REST e GraphQL leve"
-                flatpak: rest.insomnia.Insomnia
+        #"Desenvolvimento":
+        #  description: "Clientes de banco de dados e teste de APIs"
+        #  default: false
+        #  packages:
+        #    - DBeaver Community:
+        #        description: "Cliente de banco de dados universal (SQL, Postgres, MySQL, etc.)"
+        #        flatpak: io.dbeaver.DBeaverCommunity
+        #    - Postman:
+        #        description: "Plataforma de teste e desenvolvimento de APIs"
+        #        flatpak: com.getpostman.Postman
+        #    - Insomnia:
+        #        description: "Cliente REST e GraphQL leve"
+         #       flatpak: rest.insomnia.Insomnia
 
         # ── Multimídia ────────────────────────────────────
         #"Multimídia & Design":
@@ -149,13 +170,13 @@ screens:
           #      flatpak: org.inkscape.Inkscape
 
         # ── Utilitários KDE extras ─────────────────────────
-        "Utilitários KDE":
-          description: "Apps KDE adicionais"
-          default: true
-          packages:
-            - KClock:
-                description: "Relógio mundial, alarmes e cronômetro"
-                flatpak: org.kde.kclock
+        #"Utilitários KDE":
+        #  description: "Apps KDE adicionais"
+        #  default: true
+        #  packages:
+        #    - KClock:
+        #        description: "Relógio mundial, alarmes e cronômetro"
+        #        flatpak: org.kde.kclock
 
         # ── Jogos ─────────────────────────────────────────
         #"Jogos":
@@ -168,7 +189,15 @@ screens:
         #    - Lutris:
         #        description: "Gerenciador de jogos (Wine, GOG, Epic)"
         #        flatpak: net.lutris.Lutris
-
+         System Apps:
+          description: System applications for all desktop environments.
+          default: true
+          packages:
+            #- Deja Dup Backups: org.gnome.DejaDup
+            - Fedora Media Writer: org.fedoraproject.MediaWriter
+            - Flatseal (Permission Manager): com.github.tchx84.Flatseal
+            #- Font Downloader: org.gustavoperedo.FontDownloader
+            #- Mozilla Firefox: org.mozilla.firefox
   # ── Tela final ────────────────────────────────────────
   final-screen:
     source: yafti.screen.title
