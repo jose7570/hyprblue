@@ -189,7 +189,7 @@ screens:
         #    - Lutris:
         #        description: "Gerenciador de jogos (Wine, GOG, Epic)"
         #        flatpak: net.lutris.Lutris
-         System Apps:
+        "System Apps":
           description: System applications for all desktop environments.
           default: true
           packages:

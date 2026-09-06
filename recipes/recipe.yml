@@ -46,7 +46,7 @@ modules:
     install:
       packages:
       # ── Navegadores ───────────────────────────
-      - brave-origin
+      - brave-browser
       - microsoft-edge-stable
 
       # ── Desenvolvimento ───────────────────────
@@ -151,7 +151,9 @@ modules:
         LC_MESSAGES=pt_BR.UTF-8
         EOF
 
-        mkdir -p /etc/vconsole.conf
+        cat > /etc/vconsole.conf <<'EOF'
+        KEYMAP=br-abnt2
+        EOF
 
   # ──────────────────────────────────────────────
   # 6. Google Chrome (RPM oficial via CDN)
