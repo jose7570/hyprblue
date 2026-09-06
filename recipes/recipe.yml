@@ -26,15 +26,7 @@ modules:
       HOME_URL: "https://fedoraproject.org/"
       DOCUMENTATION_URL: "https://docs.fedoraproject.org/"
 
-  # ──────────────────────────────────────────────
-  # 2. Kernel Modules (DisplayLink / EVDI)
-  # ──────────────────────────────────────────────
-  #- type: akmods
-   # base: main
-   # install:
-   #   - evdi
-
-  # ──────────────────────────────────────────────
+   # ──────────────────────────────────────────────
   # 3. RPMFusion (codecs e drivers extras)
   # ──────────────────────────────────────────────
   - type: dnf
