@@ -25,12 +25,13 @@ modules:
       PRETTY_NAME: "Fedora Atomic 44 (Hyprland + Omarchy)"
       HOME_URL: "https://fedoraproject.org/"
       DOCUMENTATION_URL: "https://docs.fedoraproject.org/"
-  # 3. RPMFusion (codecs e drivers extras)
+
   # ──────────────────────────────────────────────
-  - type: dnf
-    repos:
-      nonfree:
-        - rpmfusion
+# 3. RPM Fusion
+# ──────────────────────────────────────────────
+- type: dnf
+  repos:
+    nonfree: rpmfusion
 
   # ──────────────────────────────────────────────
   # 4. Repositórios externos e pacotes do sistema
@@ -43,7 +44,7 @@ modules:
         - tofik/nwg-shell            # Ferramentas Wayland complementares
         - atim/starship-fedora       # Prompt moderno Starship
       
-      nonfree: negativo17
+      
       # Repos oficiais via .repo
       files:
         # Brave Browser (oficial)
@@ -60,7 +61,7 @@ modules:
     install:
       packages:
       # ── Navegadores ───────────────────────────
-      - brave-origin-stable
+      - brave-origin
       - microsoft-edge-stable
 
       # ── Desenvolvimento ───────────────────────
