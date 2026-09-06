@@ -163,23 +163,23 @@ modules:
   # ──────────────────────────────────────────────
   # 7. Anki 26.08.1 (tar.zst oficial)
   # ──────────────────────────────────────────────
-  - type: script
-    scripts:
-      - install-anki.sh
+  #- type: script
+  #  scripts:
+   #   - install-anki.sh
 
   # ──────────────────────────────────────────────
   # 8. JetBrains Toolbox (AppImage → /opt)
   # ──────────────────────────────────────────────
-  - type: script
-    scripts:
-      - install-jetbrains-toolbox.sh
+ # - type: script
+ #   scripts:
+  #    - install-jetbrains-toolbox.sh
 
   # ──────────────────────────────────────────────
   # 9. XMind 26.05.01106 (RPM oficial via CDN)
   # ──────────────────────────────────────────────
-  - type: script
-    scripts:
-      - install-xmind.sh
+  #- type: script
+  #  scripts:
+  #    - install-xmind.sh
 
    # ============================================================
   # Bazaar / Flatpaks
