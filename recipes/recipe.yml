@@ -18,7 +18,7 @@ modules:
   # 1. Identidade do sistema operacional
   # ──────────────────────────────────────────────
   - type: os-release
-    extra-fields:
+    properties:
       ID: fedora
       VARIANT: Hyprland Atômico
       VARIANT_ID: hyprland-atomic
@@ -48,13 +48,14 @@ modules:
   - type: dnf
     repos:
       copr:
-        #- crashdummy/Displaylink     # Daemon de espaço de usuário do DisplayLink
+        - crashdummy/Displaylink     # Daemon de espaço de usuário do DisplayLink
         - scottames/ghostty          # Ghostty terminal acelerado por GPU
         - tofik/nwg-shell            # Ferramentas Wayland complementares
         - atim/starship-fedora       # Prompt moderno Starship
-
+      
+      nonfree: negativo17
       # Repos oficiais via .repo
-      urls:
+      files:
         # Brave Browser (oficial)
         - https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
         # Microsoft Edge
@@ -67,6 +68,7 @@ modules:
         - https://packages.microsoft.com/keys/microsoft.asc
 
     install:
+      packages:
       # ── Navegadores ───────────────────────────
       - brave-origin-stable
       - microsoft-edge-stable
@@ -220,8 +222,8 @@ modules:
   # 11. Yafti — Instalador de Primeiro Boot
   #     (Bazaar, NotepadNext, LM Studio, etc.)
   # ──────────────────────────────────────────────
-  - type: yafti
-    include-default-config: false
+  #- type: yafti
+  #  custom-flatpaks:
 
   # ──────────────────────────────────────────────
   # 12. Assinatura cosign da imagem
