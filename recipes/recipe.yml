@@ -5,10 +5,7 @@
 # Repositório: jose7570/hyprblue
 # ============================================================
 name: hyprblue-br
-description: >
-  Fedora Atomic 44 com Hyprland, ambiente estilo Omarchy,
-  suporte completo ao idioma pt-BR (teclado ABNT2) e suite completa de desenvolvimento,
-  navegadores e produtividade.
+description: "Fedora Atomic 44 com Hyprland, ambiente estilo Omarchy, suporte completo ao idioma pt-BR (teclado ABNT2) e suite completa de desenvolvimento, navegadores e produtividade."
 base-image: ghcr.io/wayblueorg/hyprland-gdm
 image-version: 44
 
