@@ -32,7 +32,6 @@ modules:
       copr:
         - scottames/ghostty
         - tofik/nwg-shell
-        - atim/starship-fedora
 
       files:
         - "https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
