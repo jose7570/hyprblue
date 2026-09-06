@@ -6,11 +6,11 @@
 # ============================================================
 name: hyprblue-br
 description: >
-  Fedora Atomic 45 com Hyprland, DisplayLink (EVDI), ambiente estilo Omarchy,
+  Fedora Atomic 44 com Hyprland, ambiente estilo Omarchy,
   suporte completo ao idioma pt-BR (teclado ABNT2) e suite completa de desenvolvimento,
   navegadores e produtividade.
-base-image: ghcr.io/cjuniorfox/hyprland-atomic-solopasha
-image-version: 45
+base-image: ghcr.io/wayblueorg/hyprland-gdm
+image-version: 44
 
 modules:
 
@@ -22,17 +22,17 @@ modules:
       ID: fedora
       VARIANT: Hyprland Atômico
       VARIANT_ID: hyprland-atomic
-      PRETTY_NAME: "Fedora Atomic 45 (Hyprland + Omarchy)"
+      PRETTY_NAME: "Fedora Atomic 44 (Hyprland + Omarchy)"
       HOME_URL: "https://fedoraproject.org/"
       DOCUMENTATION_URL: "https://docs.fedoraproject.org/"
 
   # ──────────────────────────────────────────────
   # 2. Kernel Modules (DisplayLink / EVDI)
   # ──────────────────────────────────────────────
-  - type: akmods
-    base: main
-    install:
-      - evdi
+  #- type: akmods
+   # base: main
+   # install:
+   #   - evdi
 
   # ──────────────────────────────────────────────
   # 3. RPMFusion (codecs e drivers extras)
@@ -48,7 +48,7 @@ modules:
   - type: dnf
     repos:
       copr:
-        - crashdummy/Displaylink     # Daemon de espaço de usuário do DisplayLink
+        #- crashdummy/Displaylink     # Daemon de espaço de usuário do DisplayLink
         - scottames/ghostty          # Ghostty terminal acelerado por GPU
         - tofik/nwg-shell            # Ferramentas Wayland complementares
         - atim/starship-fedora       # Prompt moderno Starship
@@ -68,14 +68,14 @@ modules:
 
     install:
       # ── Navegadores ───────────────────────────
-      - brave-browser
+      - brave-origin-stable
       - microsoft-edge-stable
 
       # ── Desenvolvimento ───────────────────────
       - code                        # VS Code
       - neovim
-      - docker
-      - docker-compose
+      #- docker
+      #- docker-compose
       - git
       - curl
       - wget
@@ -107,7 +107,7 @@ modules:
       - polkit-kde                  # Agente Polkit gráfico
 
       # ── DisplayLink ───────────────────────────
-      - displaylink
+      #- displaylink
 
       # ── Editores e Visualizadores ─────────────
       - kate
@@ -198,18 +198,18 @@ modules:
   # ──────────────────────────────────────────────
   # 10. Docker & Serviços Systemd
   # ──────────────────────────────────────────────
-  - type: script
-    snippets:
-      - |
+  #- type: script
+   # snippets:
+     # - |
         # Garante a existência do grupo docker
-        groupadd -r docker 2>/dev/null || true
+      #  groupadd -r docker 2>/dev/null || true
 
-  - type: systemd
-    system:
-      enabled:
-        - docker.service
-        - docker.socket
-        - displaylink.service
+  #- type: systemd
+   # system:
+    #  enabled:
+        #- docker.service
+        #- docker.socket
+        #- displaylink.service
 
   # ──────────────────────────────────────────────
   # 11. Yafti — Instalador de Primeiro Boot
