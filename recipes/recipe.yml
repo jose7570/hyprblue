@@ -45,7 +45,6 @@ modules:
       packages:
       # ── Navegadores ───────────────────────────
       - brave-browser
-      - microsoft-edge-stable
 
       # ── Desenvolvimento ───────────────────────
       - code                        # VS Code
@@ -59,13 +58,12 @@ modules:
 
       # ── Terminal / Shell / Prompt ─────────────
       - ghostty
-      - starship
       - fastfetch
 
       # ── Ambiente Hyprland & Estilo Omarchy ────
       - waybar
       - rofi-wayland
-      - swaynotificationcenter      # SwayNC
+      - swaync                      # SwayNC
       - swaybg
       - hyprlock
       - hypridle
@@ -73,7 +71,6 @@ modules:
       - cliphist
       - grim
       - slurp
-      - satty                       # Anotação de tela para Wayland
       - brightnessctl
       - pavucontrol
       - network-manager-applet
@@ -108,7 +105,6 @@ modules:
       # ── Multimídia e Rede ─────────────────────
       - vlc
       - qbittorrent
-      - kdeconnect
       - krdc
 
       # ── Apps KDE / Segurança ──────────────────
@@ -127,8 +123,6 @@ modules:
       - google-noto-fonts-common
       - google-noto-sans-fonts
       - google-noto-color-emoji-fonts
-      - jetbrains-mono-nerd-fonts
-      - fira-code-nerd-fonts
       - fontawesome-fonts-all
        # --------------------------------------------------------
         # Fontes
