@@ -17,27 +17,13 @@ curl -fsSL --retry 3 "${ANKI_URL}" -o "${TMP_DIR}/anki.tar.zst"
 echo "==> Extraindo..."
 tar --use-compress-program=unzstd -xf "${TMP_DIR}/anki.tar.zst" -C "${TMP_DIR}"
 
-ANKI_DIR="${TMP_DIR}/anki-${ANKI_VERSION}-linux-x86_64"
+ANKI_DIR="${TMP_DIR}/anki-linux"
 
 echo "==> Instalando em ${INSTALL_PREFIX}..."
-# O instalador oficial do Anki usa install.sh
-if [ -f "${ANKI_DIR}/install.sh" ]; then
-    # Forçar o prefixo de instalação via variável
-    PREFIX="${INSTALL_PREFIX}" bash "${ANKI_DIR}/install.sh"
-else
-    # Fallback manual caso o layout mude
-    install -Dm755 "${ANKI_DIR}/anki" "${INSTALL_PREFIX}/bin/anki"
-
-    # Ícone
-    if [ -f "${ANKI_DIR}/lib/anki/anki.png" ]; then
-        install -Dm644 "${ANKI_DIR}/lib/anki/anki.png" \
-            /usr/share/pixmaps/anki.png
-    fi
-
-    # Arquivos de dados
-    mkdir -p "${INSTALL_PREFIX}/share/anki"
-    cp -r "${ANKI_DIR}"/lib/anki/* "${INSTALL_PREFIX}/share/anki/" 2>/dev/null || true
-fi
+install -d "${INSTALL_PREFIX}/anki"
+cp -a "${ANKI_DIR}/." "${INSTALL_PREFIX}/anki/"
+chmod 755 "${INSTALL_PREFIX}/anki/anki"
+ln -sf "${INSTALL_PREFIX}/anki/anki" "${INSTALL_PREFIX}/bin/anki"
 
 # .desktop file
 cat > /usr/share/applications/anki.desktop << 'DESKTOP'
