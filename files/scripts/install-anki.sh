@@ -21,6 +21,7 @@ ANKI_DIR="${TMP_DIR}/anki-linux"
 
 echo "==> Instalando em ${INSTALL_PREFIX}..."
 install -d "${INSTALL_PREFIX}/anki"
+install -d "${INSTALL_PREFIX}/bin"
 cp -a "${ANKI_DIR}/." "${INSTALL_PREFIX}/anki/"
 chmod 755 "${INSTALL_PREFIX}/anki/anki"
 ln -sf "${INSTALL_PREFIX}/anki/anki" "${INSTALL_PREFIX}/bin/anki"
