@@ -1,0 +1,7 @@
+[fedora-cisco-openh264]
+name=Fedora $releasever openh264 (From Cisco) - $basearch
+baseurl=https://codecs.fedoraproject.org/openh264/$releasever/$basearch/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://www.cisco.com/security/pki/certs/Cisco_Root_CA_2.cer

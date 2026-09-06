@@ -23,7 +23,9 @@ modules:
 
   - type: dnf
     repos:
-      nonfree: negativo17
+      nonfree: rpmfusion
+      files:
+        - fedora-cisco-openh264.repo
 
   - type: dnf
     repos:
