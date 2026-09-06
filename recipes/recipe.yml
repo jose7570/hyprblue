@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 # ============================================================
-# Hyprland Atômico (Fedora Atomic 45)
+# Hyprland Atômico (Fedora Atomic 44)
 # Hyprland + DisplayLink + Estilo Omarchy + pt-BR
 # Repositório: jose7570/hyprblue
 # ============================================================
@@ -122,6 +122,11 @@ modules:
       # ── OCR (Tesseract + pt-BR) ───────────────
       - tesseract
       - tesseract-langpack-por
+      - tesseract-langpack-eng
+      - hunspell-pt-BR
+      - hunspell-en-US
+      - aspell-pt_BR
+      - aspell-en
 
       # ── Multimídia e Rede ─────────────────────
       - vlc
