@@ -68,8 +68,6 @@ modules:
       # ── Desenvolvimento ───────────────────────
       - code                        # VS Code
       - neovim
-      #- docker
-      #- docker-compose
       - git
       - curl
       - wget
@@ -117,6 +115,9 @@ modules:
       - tesseract
       - tesseract-langpack-por
       - tesseract-langpack-eng
+      # --------------------------------------------------------
+        # Dicionários
+        # --------------------------------------------------------
       - hunspell-pt-BR
       - hunspell-en-US
       - aspell-pt_BR
@@ -140,16 +141,20 @@ modules:
       - plasma-emojier
       - spectacle
 
-      # ── Fontes, Ícones e Locale pt-BR ─────────
+      # ── Fontes, Ícones ─────────
       - google-noto-fonts-common
       - google-noto-sans-fonts
       - google-noto-color-emoji-fonts
       - jetbrains-mono-nerd-fonts
       - fira-code-nerd-fonts
       - fontawesome-fonts-all
+       # --------------------------------------------------------
+        # Fontes
+        # --------------------------------------------------------
       - langpacks-pt_BR
+      - langpacks-en
       - glibc-langpack-pt
-      - hunspell-pt-BR
+      - glibc-langpack-en
 
   # ──────────────────────────────────────────────
   # 5. Locale pt-BR como padrão do sistema
@@ -157,14 +162,12 @@ modules:
   - type: script
     snippets:
       - |
-        # Configura locale pt_BR.UTF-8 como padrão do sistema
-        localectl set-locale LANG=pt_BR.UTF-8 || \
-          echo "LANG=pt_BR.UTF-8" > /etc/locale.conf
-        # Adiciona suporte a pt-BR no /etc/locale.gen se existir
-        if [ -f /etc/locale.gen ]; then
-          echo "pt_BR.UTF-8 UTF-8" >> /etc/locale.gen
-          locale-gen || true
-        fi
+        cat > /etc/locale.conf <<'EOF'
+        LANG=pt_BR.UTF-8
+        LC_MESSAGES=pt_BR.UTF-8
+        EOF
+
+        mkdir -p /etc/vconsole.conf
 
   # ──────────────────────────────────────────────
   # 6. Google Chrome (RPM oficial via CDN)
@@ -194,30 +197,22 @@ modules:
     scripts:
       - install-xmind.sh
 
-  # ──────────────────────────────────────────────
-  # 10. Docker & Serviços Systemd
-  # ──────────────────────────────────────────────
-  #- type: script
-   # snippets:
-     # - |
-        # Garante a existência do grupo docker
-      #  groupadd -r docker 2>/dev/null || true
+   # ============================================================
+  # Bazaar / Flatpaks
+  # ============================================================
 
-  #- type: systemd
-   # system:
-    #  enabled:
-        #- docker.service
-        #- docker.socket
-        #- displaylink.service
+  - type: default-flatpaks
+    configurations:
 
-  # ──────────────────────────────────────────────
-  # 11. Yafti — Instalador de Primeiro Boot
-  #     (Bazaar, NotepadNext, LM Studio, etc.)
-  # ──────────────────────────────────────────────
-  #- type: yafti
-  #  custom-flatpaks:
+      - scope: system
+        repo:
+          name: flathub
+          url: https://dl.flathub.org/repo/flathub.flatpakrepo
 
-  # ──────────────────────────────────────────────
+        install:
+          - io.github.kolunmi.Bazaar
+
+   # ──────────────────────────────────────────────
   # 12. Assinatura cosign da imagem
   # ──────────────────────────────────────────────
   - type: signing
