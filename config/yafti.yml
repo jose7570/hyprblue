@@ -72,9 +72,9 @@ screens:
             - NotepadNext:
                 description: "Editor de texto avançado (Notepadng / clone moderno do Notepad++)"
                 flatpak: com.github.dail8859.NotepadNext
-            - Drawio:
-                description: "Criação de diagramas e fluxogramas profissionais (Draw.io)"
-                flatpak: com.jgraph.drawio.desktop
+            #- Drawio:
+            #    description: "Criação de diagramas e fluxogramas profissionais (Draw.io)"
+            #    flatpak: com.jgraph.drawio.desktop
             - Drawing:
                 description: "Aplicativo intuitivo para desenhos e anotações rápidas (Drawy)"
                 flatpak: com.github.maoschanz.drawing
@@ -92,28 +92,28 @@ screens:
                 flatpak: io.github.xiaoyifang.goldendict_ng
 
         # ── Comunicação ──────────────────────────────────
-        "Comunicação":
-          description: "Mensageiros e colaboração"
-          default: true
-          packages:
-            - Telegram:
-                description: "Mensageiro Telegram Desktop"
-                flatpak: org.telegram.desktop
-            - Discord:
-                description: "Discord — chat de voz, vídeo e comunidades"
-                flatpak: com.discordapp.Discord
-            - Slack:
-                description: "Slack — comunicação e workspaces"
-                flatpak: com.slack.Slack
+       # "Comunicação":
+        #  description: "Mensageiros e colaboração"
+        #  default: true
+        #  packages:
+         #   - Telegram:
+         #       description: "Mensageiro Telegram Desktop"
+         #       flatpak: org.telegram.desktop
+         #   - Discord:
+         #       description: "Discord — chat de voz, vídeo e comunidades"
+         #       flatpak: com.discordapp.Discord
+         #   - Slack:
+         #       description: "Slack — comunicação e workspaces"
+         #       flatpak: com.slack.Slack
 
         # ── Navegadores extras ────────────────────────────
-        "Navegadores Extras":
-          description: "Outros navegadores web"
-          default: false
-          packages:
-            - Firefox:
-                description: "Mozilla Firefox oficial Flatpak"
-                flatpak: org.mozilla.firefox
+        #"Navegadores Extras":
+        #  description: "Outros navegadores web"
+        #  default: false
+        #  packages:
+         #   - Firefox:
+         #       description: "Mozilla Firefox oficial Flatpak"
+         #       flatpak: org.mozilla.firefox
 
         # ── Desenvolvimento ────────────────────────────────
         "Desenvolvimento":
@@ -131,22 +131,22 @@ screens:
                 flatpak: rest.insomnia.Insomnia
 
         # ── Multimídia ────────────────────────────────────
-        "Multimídia & Design":
-          description: "Áudio, vídeo e gráficos"
-          default: false
-          packages:
-            - Spotify:
-                description: "Player de streaming de música Spotify"
-                flatpak: com.spotify.Client
-            - Kdenlive:
-                description: "Editor de vídeo profissional"
-                flatpak: org.kde.kdenlive
-            - GIMP:
-                description: "Editor avançado de imagens e fotos"
-                flatpak: org.gimp.GIMP
-            - Inkscape:
-                description: "Editor de gráficos vetoriais SVG"
-                flatpak: org.inkscape.Inkscape
+        #"Multimídia & Design":
+        #  description: "Áudio, vídeo e gráficos"
+        #  default: false
+        #  packages:
+          #  - Spotify:
+          #      description: "Player de streaming de música Spotify"
+          #      flatpak: com.spotify.Client
+          #  - Kdenlive:
+          #      description: "Editor de vídeo profissional"
+          #      flatpak: org.kde.kdenlive
+          #  - GIMP:
+          #      description: "Editor avançado de imagens e fotos"
+          #      flatpak: org.gimp.GIMP
+          #  - Inkscape:
+          #      description: "Editor de gráficos vetoriais SVG"
+          #      flatpak: org.inkscape.Inkscape
 
         # ── Utilitários KDE extras ─────────────────────────
         "Utilitários KDE":
@@ -158,16 +158,16 @@ screens:
                 flatpak: org.kde.kclock
 
         # ── Jogos ─────────────────────────────────────────
-        "Jogos":
-          description: "Plataformas de games"
-          default: false
-          packages:
-            - Steam:
-                description: "Plataforma Steam da Valve"
-                flatpak: com.valvesoftware.Steam
-            - Lutris:
-                description: "Gerenciador de jogos (Wine, GOG, Epic)"
-                flatpak: net.lutris.Lutris
+        #"Jogos":
+        #  description: "Plataformas de games"
+        #  default: false
+        #  packages:
+        #    - Steam:
+        #        description: "Plataforma Steam da Valve"
+        #        flatpak: com.valvesoftware.Steam
+        #    - Lutris:
+        #        description: "Gerenciador de jogos (Wine, GOG, Epic)"
+        #        flatpak: net.lutris.Lutris
 
   # ── Tela final ────────────────────────────────────────
   final-screen:
