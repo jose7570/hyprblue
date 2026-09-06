@@ -14,49 +14,34 @@ image-version: 44
 
 modules:
 
-  # ──────────────────────────────────────────────
-  # 1. Identidade do sistema operacional
-  # ──────────────────────────────────────────────
   - type: os-release
     properties:
       ID: fedora
-      VARIANT: Hyprland Atômico
-      VARIANT_ID: hyprland-atomic
-      PRETTY_NAME: "Fedora Atomic 44 (Hyprland + Omarchy)"
+      ID_LIKE: fedora
+      VARIANT: "Hyprland Atomic"
+      VARIANT_ID: "hyprland-atomic"
+      PRETTY_NAME: "Fedora Atomic 44 (Hyprland)"
       HOME_URL: "https://fedoraproject.org/"
       DOCUMENTATION_URL: "https://docs.fedoraproject.org/"
 
-  # ──────────────────────────────────────────────
-# 3. RPM Fusion
-# ──────────────────────────────────────────────
-- type: dnf
-  repos:
-    nonfree: rpmfusion
+  - type: dnf
+    repos:
+      nonfree: rpmfusion
 
-  # ──────────────────────────────────────────────
-  # 4. Repositórios externos e pacotes do sistema
-  # ──────────────────────────────────────────────
   - type: dnf
     repos:
       copr:
-        - crashdummy/Displaylink     # Daemon de espaço de usuário do DisplayLink
-        - scottames/ghostty          # Ghostty terminal acelerado por GPU
-        - tofik/nwg-shell            # Ferramentas Wayland complementares
-        - atim/starship-fedora       # Prompt moderno Starship
-      
-      
-      # Repos oficiais via .repo
-      files:
-        # Brave Browser (oficial)
-        - https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-        # Microsoft Edge
-        - https://packages.microsoft.com/yumrepos/edge/config.repo
-        # VS Code
-        - https://packages.microsoft.com/yumrepos/vscode/config.repo
+        - scottames/ghostty
+        - tofik/nwg-shell
+        - atim/starship-fedora
 
-      # Chaves GPG dos repos Microsoft
+      files:
+        - "https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
+        - "https://packages.microsoft.com/yumrepos/edge/config.repo"
+        - "https://packages.microsoft.com/yumrepos/vscode/config.repo"
+
       keys:
-        - https://packages.microsoft.com/keys/microsoft.asc
+        - "https://packages.microsoft.com/keys/microsoft.asc"
 
     install:
       packages:
