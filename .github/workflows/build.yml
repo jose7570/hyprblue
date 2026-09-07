@@ -69,8 +69,7 @@ jobs:
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             echo "image_tag=latest" >> "$GITHUB_OUTPUT"
           else
-            SAFE_REF_NAME="${GITHUB_REF_NAME//\//_}"
-            echo "image_tag=br-${SAFE_REF_NAME}-44" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${GITHUB_SHA::7}-44" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build ISO
